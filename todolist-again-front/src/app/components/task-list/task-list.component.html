@@ -1,16 +1,25 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>My Tasks</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-form-field appearance="outline" class="full-width">
-      <input matInput placeholder="Add a task">
-    </mat-form-field>
+<div class="container">
+    <mat-card class="task-card">
+        <mat-card-header>
+            <mat-card-title class="task-title">My Tasks</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="task-input-container">
+                <mat-form-field appearance="outline" class="full-width">
+                    <input matInput placeholder="Add a task">
+                </mat-form-field>
+                <button matIconButton aria-label="Add a task">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
 
-    <mat-selection-list>
-      <mat-list-option [selected]="true">Grocery shopping</mat-list-option>
-      <mat-list-option>Pay bills</mat-list-option>
-      <mat-list-option>Schedule doctor’s appointment</mat-list-option>
-    </mat-selection-list>
-  </mat-card-content>
-</mat-card>
+            <mat-selection-list>
+                @for (task of tasks; track task.id){
+                <mat-list-option [selected]="task.isDone" (click)="toggleTask(task.id)">{{ task.title }}</mat-list-option>
+                }
+            </mat-selection-list>
+
+            <button (click)="logTaskList()">Console log task list</button>
+        </mat-card-content>
+    </mat-card>
+</div>

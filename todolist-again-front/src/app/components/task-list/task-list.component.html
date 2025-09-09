@@ -4,18 +4,24 @@
             <mat-card-title class="task-title">My Tasks</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div class="task-input-container">
+            <form (ngSubmit)="addTask()" class="task-input-container">
                 <mat-form-field appearance="outline" class="full-width">
-                    <input matInput placeholder="Add a task">
+                    <input matInput placeholder="Add a task" [formControl]="taskControl">
                 </mat-form-field>
-                <button matIconButton aria-label="Add a task">
+                <button type="submit" matIconButton aria-label="Add a task" [disabled]="!taskControl.value?.trim()">
                     <mat-icon>add</mat-icon>
                 </button>
-            </div>
+            </form>
 
-            <mat-selection-list>
+            <mat-selection-list class="task-list">
                 @for (task of tasks; track task.id){
-                <mat-list-option [selected]="task.isDone" (click)="toggleTask(task.id)">{{ task.title }}</mat-list-option>
+                <div class="task-option">
+                    <mat-list-option [selected]="task.isDone" (click)="toggleTask(task.id)">{{ task.title
+                        }}</mat-list-option>
+                    <button matIconButton aria-label="Remove a task" (click)="removeTask(task.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
                 }
             </mat-selection-list>
 

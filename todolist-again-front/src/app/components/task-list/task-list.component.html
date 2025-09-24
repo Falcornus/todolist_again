@@ -14,7 +14,7 @@
             </form>
 
             <mat-selection-list class="task-list">
-                @for (task of tasks; track task.id){
+                @for (task of tasks | async; track task.id){
                 <div class="task-option">
                     <mat-list-option [selected]="task.isDone" (click)="toggleTask(task.id)">{{ task.title
                         }}</mat-list-option>
@@ -24,8 +24,6 @@
                 </div>
                 }
             </mat-selection-list>
-
-            <button (click)="logTaskList()">Console log task list</button>
         </mat-card-content>
     </mat-card>
 </div>

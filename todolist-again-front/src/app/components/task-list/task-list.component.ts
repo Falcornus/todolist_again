@@ -76,3 +76,4 @@ export class TaskListComponent {
     return this.localTasks.length > 0 ? Math.max(...this.localTasks.map(t => t.id)) + 1 : 1;
   }
 }
+  

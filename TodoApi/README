@@ -1,0 +1,41 @@
+# TodoApi
+
+A RESTful API for managing todo tasks built with ASP.NET Core.
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 9.0 SDK or later
+
+### Running the Application
+
+To run this project, execute the following command:
+
+```bash
+dotnet run
+```
+
+The API will start and be available at:
+- HTTP: http://localhost:5240
+- HTTPS: https://localhost:7239
+
+### API Documentation
+
+Once the application is running, you can access the Swagger UI documentation at:
+- http://localhost:5240/swagger
+- https://localhost:7239/swagger
+
+## Project Structure
+
+- **Controllers/** - API endpoint controllers
+- **Data/** - Database context and configurations
+- **Migrations/** - Entity Framework Core migrations
+- **Models/** - Data models and entities
+- **Properties/** - Launch settings and configuration
+
+## Technologies Used
+
+- ASP.NET Core 9.0
+- Entity Framework Core
+- SQL Server / Database provider

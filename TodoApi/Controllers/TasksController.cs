@@ -53,6 +53,7 @@ public class TasksController(AppDbContext dbContext) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {
+        Console.WriteLine("DeleteTask method called");
         var task = await dbContext.TaskItems.FindAsync(id);
         if (task == null)
         {

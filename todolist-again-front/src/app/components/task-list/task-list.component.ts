@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Task } from '../../models/task';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
@@ -26,7 +26,8 @@ import { Observable, Subject, switchMap, startWith } from 'rxjs';
     MatIconModule,
     ReactiveFormsModule,
     FormsModule,
-    AsyncPipe
+    AsyncPipe,
+    DatePipe
   ],
   providers: [TasksService],
   templateUrl: './task-list.component.html',
@@ -58,7 +59,6 @@ export class TaskListComponent {
         isDone: false
       };
 
-      console.log('Adding task:', newTask);
       this.tasksService.addTask(newTask).subscribe(() => {
         this.taskControl.reset();
         this.refreshTasks$.next();

@@ -15,12 +15,16 @@
 
             <mat-selection-list class="task-list">
                 @for (task of tasks | async; track task.id){
-                <div class="task-option">
-                    <mat-list-option [selected]="task.isDone" (click)="toggleTask(task)">{{ task.title
-                        }}</mat-list-option>
-                    <button matIconButton aria-label="Remove a task" (click)="removeTask(task.id)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
+                <div class="task-wrapper">
+                    <div class="task-option">
+                        <mat-list-option [selected]="task.isDone" (click)="toggleTask(task)">
+                            {{ task.title }}
+                        </mat-list-option>
+                        <button matIconButton aria-label="Remove a task" (click)="removeTask(task.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                    <p class="task-creation">Created : <span>{{ task.createdAt | date }}</span></p>
                 </div>
                 }
             </mat-selection-list>

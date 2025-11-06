@@ -9,7 +9,9 @@ import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TasksService } from '../../services/tasks.service';
-import { Observable, Subject, switchMap, startWith } from 'rxjs';
+import { Observable, Subject, switchMap, startWith, map } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { SortingOption } from '../../models/sorting-option';
 
 @Component({
   selector: 'app-task-list',
@@ -27,7 +29,8 @@ import { Observable, Subject, switchMap, startWith } from 'rxjs';
     ReactiveFormsModule,
     FormsModule,
     AsyncPipe,
-    DatePipe
+    DatePipe,
+    MatMenuModule
   ],
   providers: [TasksService],
   templateUrl: './task-list.component.html',
@@ -38,9 +41,43 @@ export class TaskListComponent {
   private tasksService = inject(TasksService);
   private refreshTasks$ = new Subject<void>();
 
+  public sortingOptions: SortingOption[] = [
+    {
+      value: 'createdAtAsc',
+      viewValue: 'Creation Date Ascending',
+      icon: 'arrow_upward'
+    },
+    {
+      value: 'createdAtDesc',
+      viewValue: 'Creation Date Descending',
+      icon: 'arrow_downward'
+    },
+    {
+      value: 'None',
+      viewValue: 'None',
+      icon: 'filter_none'
+    }
+  ];
+
+  private currentSortingOption: SortingOption | null = null;
+
   public tasks: Observable<Task[]> = this.refreshTasks$.pipe(
     startWith(undefined),
-    switchMap(() => this.tasksService.getTasks())
+    switchMap(() => this.tasksService.getTasks()),
+    map(tasks => {
+      if (this.currentSortingOption) {
+        switch (this.currentSortingOption.value) {
+          case 'createdAtAsc':
+            return [...tasks].sort((a, b) => (a.createdAt ? new Date(a.createdAt).getTime() : 0) - (b.createdAt ? new Date(b.createdAt).getTime() : 0));
+          case 'createdAtDesc':
+            return [...tasks].sort((a, b) => (b.createdAt ? new Date(b.createdAt).getTime() : 0) - (a.createdAt ? new Date(a.createdAt).getTime() : 0));
+          default:
+            return tasks;
+        }
+      }
+
+      return tasks;
+    })
   );
 
   public taskControl = new FormControl('');
@@ -54,7 +91,7 @@ export class TaskListComponent {
     const taskTitle = this.taskControl.value?.trim();
     if (taskTitle) {
       const newTask: Task = {
-        id: 0, 
+        id: 0,
         title: taskTitle,
         isDone: false
       };
@@ -70,5 +107,10 @@ export class TaskListComponent {
     this.tasksService.deleteTask(id).subscribe(() => {
       this.refreshTasks$.next();
     });
+  }
+
+  public sortTasks(option: SortingOption) {
+    this.currentSortingOption = option;
+    this.refreshTasks$.next();
   }
 }

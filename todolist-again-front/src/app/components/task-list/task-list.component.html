@@ -12,7 +12,21 @@
                     <mat-icon>add</mat-icon>
                 </button>
             </form>
+            <div class="task-filter-bar">
+                <button matIconButton [matMenuTriggerFor]="menu" aria-label="Sorting options">
+                    <mat-icon>swap_vert</mat-icon>
+                </button>
 
+                <mat-menu #menu="matMenu">
+                    @for (option of sortingOptions; track option){
+                    <button mat-menu-item (click)="sortTasks(option)">
+                        <mat-icon>{{ option.icon }}</mat-icon>
+                        <span>{{ option.viewValue }}</span>
+                    </button>
+                    }
+                </mat-menu>
+
+            </div>
             <mat-selection-list class="task-list">
                 @for (task of tasks | async; track task.id){
                 <div class="task-wrapper">
@@ -24,7 +38,7 @@
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>
-                    <p class="task-creation">Created : <span>{{ task.createdAt | date }}</span></p>
+                    <p class="task-creation">Created : <span>{{ task.createdAt | date: 'short' }}</span></p>
                 </div>
                 }
             </mat-selection-list>

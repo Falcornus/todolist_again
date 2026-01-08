@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
@@ -5,6 +7,7 @@ using TodoApi.Models;
 
 namespace TodoApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/tasks")]
 public class TasksController(AppDbContext dbContext) : ControllerBase
@@ -12,14 +15,16 @@ public class TasksController(AppDbContext dbContext) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTasks()
     {
-        var tasks = await dbContext.TaskItems.ToListAsync();
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var tasks = await dbContext.TaskItems.Where(t => t.UserId == userId).ToListAsync();
         return Ok(tasks);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTask(int id)
     {
-        var task = await dbContext.TaskItems.FindAsync(id);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var task = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
         if (task == null)
         {
             return NotFound();
@@ -30,6 +35,8 @@ public class TasksController(AppDbContext dbContext) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateTask([FromBody] TaskItem task)
     {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        task.UserId = userId;
         dbContext.TaskItems.Add(task);
         await dbContext.SaveChangesAsync();
         return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
@@ -38,7 +45,8 @@ public class TasksController(AppDbContext dbContext) : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTask(int id, [FromBody] TaskItem updatedTask)
     {
-        var task = await dbContext.TaskItems.FindAsync(id);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var task = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
         if (task == null)
         {
             return NotFound();
@@ -54,7 +62,8 @@ public class TasksController(AppDbContext dbContext) : ControllerBase
     public async Task<IActionResult> DeleteTask(int id)
     {
         Console.WriteLine("DeleteTask method called");
-        var task = await dbContext.TaskItems.FindAsync(id);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var task = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
         if (task == null)
         {
             return NotFound();

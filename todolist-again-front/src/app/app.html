@@ -1,1 +1,11 @@
-<app-task-list></app-task-list>
+<mat-toolbar color="primary">
+  <span>Todo List App</span>
+  <span class="spacer"></span>
+  @if (isLoggedIn$ | async) {
+    <button mat-button (click)="logout()">Logout</button>
+  }
+</mat-toolbar>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

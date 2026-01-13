@@ -7,7 +7,6 @@ using TodoApi.Services;
 
 namespace TodoApi.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("api/auth")]
 public class AuthController: ControllerBase

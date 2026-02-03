@@ -14,7 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlite("Data Source=tasks.db"));
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? "Data Source=/var/data/app.db"));
 
 // Add CORS policy
 builder.Services.AddCors(options =>

@@ -32,6 +32,10 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<JwtService>();
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters

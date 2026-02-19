@@ -55,6 +55,13 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Auto-apply migrations so SQLite DB is created in the container
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -69,7 +76,10 @@ if (app.Environment.IsDevelopment())
 // Enable CORS - must be before UseHttpsRedirection
 app.UseCors("AllowAngularApp");
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapControllers();
 

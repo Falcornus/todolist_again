@@ -13,9 +13,7 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 
-ENV PORT=8080 \
-    ASPNETCORE_URLS=http://+:${PORT} \
-    ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 RUN mkdir -p /var/data
 
@@ -23,4 +21,5 @@ COPY --from=build /app/publish .
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "TodoApi.dll"]
+# Render sets PORT at runtime; map it to ASPNETCORE_HTTP_PORTS
+ENTRYPOINT ["/bin/sh", "-c", "ASPNETCORE_HTTP_PORTS=${PORT:-8080} dotnet TodoApi.dll"]

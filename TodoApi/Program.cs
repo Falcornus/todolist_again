@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200", "http://localhost:5240") // Angular and direct API access
+            policy.WithOrigins("http://localhost:4200", "http://localhost:5240", "https://todolist-again.pages.dev") // Angular and direct API access
                   .AllowAnyMethod()
                   .AllowAnyHeader()
                   .AllowCredentials();
